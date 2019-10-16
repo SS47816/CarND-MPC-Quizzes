@@ -27,19 +27,12 @@ hostinfo               = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
 
-PATH: /home/agv/anaconda3/envs/py3/bin
-PATH: /home/agv/anaconda3/condabin
-PATH: /opt/ros/kinetic/bin
-PATH: /home/agv/bin
-PATH: /home/agv/.local/bin
 PATH: /usr/local/sbin
 PATH: /usr/local/bin
 PATH: /usr/sbin
 PATH: /usr/bin
 PATH: /sbin
 PATH: /bin
-PATH: /usr/games
-PATH: /usr/local/games
 PATH: /snap/bin
 
 
@@ -336,7 +329,7 @@ COIN_CC_IS_CL_FALSE=''
 COIN_CC_IS_CL_TRUE='#'
 COIN_HAS_PKGCONFIG_FALSE='#'
 COIN_HAS_PKGCONFIG_TRUE=''
-COIN_PKG_CONFIG_PATH='/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/home/agv/catkin_ws/devel/lib/pkgconfig:/opt/ros/kinetic/lib/pkgconfig:/opt/ros/kinetic/lib/x86_64-linux-gnu/pkgconfig'
+COIN_PKG_CONFIG_PATH='/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:'
 COIN_PKG_CONFIG_PATH_UNINSTALLED='/home/agv/ss_ws/CarND-MPC-Quizzes/Ipopt-3.12.11/Ipopt:/home/agv/ss_ws/CarND-MPC-Quizzes/Ipopt-3.12.11/ThirdParty/Mumps:/home/agv/ss_ws/CarND-MPC-Quizzes/Ipopt-3.12.11/ThirdParty/ASL:'
 CPP='gcc -E'
 CPPFLAGS=''

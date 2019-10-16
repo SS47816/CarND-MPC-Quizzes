@@ -580,7 +580,7 @@ s,@PKG_CONFIG@,pkg-config,;t t
 s,@ac_ct_PKG_CONFIG@,pkg-config,;t t
 s,@COIN_HAS_PKGCONFIG_TRUE@,,;t t
 s,@COIN_HAS_PKGCONFIG_FALSE@,#,;t t
-s,@COIN_PKG_CONFIG_PATH@,/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/home/agv/catkin_ws/devel/lib/pkgconfig:/opt/ros/kinetic/lib/pkgconfig:/opt/ros/kinetic/lib/x86_64-linux-gnu/pkgconfig,;t t
+s,@COIN_PKG_CONFIG_PATH@,/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:,;t t
 s,@COIN_PKG_CONFIG_PATH_UNINSTALLED@,/home/agv/ss_ws/CarND-MPC-Quizzes/Ipopt-3.12.11/Ipopt:/home/agv/ss_ws/CarND-MPC-Quizzes/Ipopt-3.12.11/ThirdParty/Mumps:/home/agv/ss_ws/CarND-MPC-Quizzes/Ipopt-3.12.11/ThirdParty/ASL:,;t t
 s,@AMPLSOLVER_A@,libamplsolver.a,;t t
 s,@HOST_TYPE@,,;t t
