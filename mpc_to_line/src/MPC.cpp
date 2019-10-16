@@ -26,6 +26,8 @@ double dt = 0.05;
 // This is the length from front to CoG that has a similar radius.
 const double Lf = 2.67;
 
+const double w_cont_steer = 500;
+
 // NOTE: feel free to play around with this or do something completely different
 double ref_v = 40;
 
@@ -78,7 +80,7 @@ class FG_eval {
     // Minimize the value gap between sequential actuators
     for (int t = 0; t < N - 2; ++t)
     {
-      fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
+      fg[0] += w_cont_steer * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
       fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
 
