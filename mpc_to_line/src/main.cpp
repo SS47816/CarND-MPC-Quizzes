@@ -22,22 +22,31 @@ int main() {
 
   /**
    * TODO: fit a polynomial to the above x and y coordinates
+   * The polynomial is fitted to a straight line 
+   * so a ploynomial with order of 1 is sufficient
    */
-  auto coeffs = ? ;
+  auto coeffs = polyfit(ptsx, ptsy, 1) ;
 
+  // Start state
   // NOTE: free feel to play around with these
   double x = -1;
   double y = 10;
   double psi = 0;
   double v = 10;
+  
   /**
    * TODO: calculate the cross track error
+   * The cross track error is calculated by evaluating 
+   * at polynomial at (x, f(x)) and subtracting y.
    */
-  double cte = ? ;
+  double cte = polyeval(coeffs, x) - y;
+  
   /**
    * TODO: calculate the orientation error
+   * Due to the sign starting at 0, the orientation error is -f'(x)
+   * derivative of coeffs[0] + coeffs[1] * x -> coeffs[1]
    */
-  double epsi = ? ;
+  double epsi = psi - atan(coeffs[1]);
 
   VectorXd state(6);
   state << x, y, psi, v, cte, epsi;
