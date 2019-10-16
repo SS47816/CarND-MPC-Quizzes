@@ -123,6 +123,9 @@ class FG_eval {
       AD<double> epsi0 = vars[epsi_start + t - 1];
 
       // Only consider the actuation at time t
+      AD<double> delta0 = vars[delta_start + t - 1];
+      AD<double> a0 = vars[a_start + t - 1];
+
       AD<double> f0 = coeffs[0] + coeffs[1] * x0;
       AD<double> psides0 = CppAD::atan(coeffs[1]);
 
@@ -131,13 +134,24 @@ class FG_eval {
       //
       // NOTE: The use of `AD<double>` and use of `CppAD`!
       // CppAD can compute derivatives and pass these to the solver.
-
+      
       /**
        * TODO: Setup the rest of the model constraints
+       * The equations for the model:
+       * x_[t+1] = x[t] + v[t] * cos(psi[t]) * dt
+       * y_[t+1] = y[t] + v[t] * sin(psi[t]) * dt
+       * psi_[t+1] = psi[t] + v[t] / Lf * delta[t] * dt
+       * v_[t+1] = v[t] + a[t] * dt
+       * cte[t+1] = f(x[t]) - y[t] + v[t] * sin(epsi[t]) * dt
+       * epsi[t+1] = psi[t] - psides[t] + v[t] * delta[t] / Lf * dt
        */
       
       fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
-
+      fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
+      fg[1 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
+      fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
+      fg[1 + cte_start + t] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
+      fg[1 + epsi_start + t] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);
     }
   }
 };
