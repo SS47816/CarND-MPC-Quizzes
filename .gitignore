@@ -3,4 +3,4 @@
 tags
 .editorconfig
 .DS_Store
-/Ipopt*
+/Ipopt*/
