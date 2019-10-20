@@ -12,8 +12,8 @@ set -e
 # copying the sources.
 
 # set -x
-mkinstalldirs="/home/agv/ss_ws/CarND-MPC-Quizzes/Ipopt-3.12.11/ThirdParty/ASL/install-sh -d"
-abs_source_dir=/home/agv/ss_ws/CarND-MPC-Quizzes/Ipopt-3.12.11/ThirdParty/ASL
+mkinstalldirs="/home/ss/ss_ws/CarND-MPC-Quizzes/Ipopt-3.12.11/ThirdParty/ASL/install-sh -d"
+abs_source_dir=/home/ss/ss_ws/CarND-MPC-Quizzes/Ipopt-3.12.11/ThirdParty/ASL
 compdir=compdir
 
 rm -rf $compdir
