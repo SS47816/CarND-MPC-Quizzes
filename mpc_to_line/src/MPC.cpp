@@ -12,7 +12,7 @@ using Eigen::VectorXd;
  * TODO: Set N and dt
  */
 size_t N = 25;
-double dt = 0.05;
+double dt = 0.2;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -24,12 +24,14 @@ double dt = 0.05;
 // presented in the classroom matched the previous radius.
 //
 // This is the length from front to CoG that has a similar radius.
-const double Lf = 2.67;
+const double Lf = 1.1;
 
 const double w_cont_steer = 500;
+const double w_cont_accel = 1.0;
+std::vector<double> weights = {1.0, 1.0, 1.0, 1.0, 1.0, w_cont_steer, w_cont_accel};
 
 // NOTE: feel free to play around with this or do something completely different
-double ref_v = 40;
+double ref_v = 3;
 
 // The solver takes all the state variables and actuator
 // variables in a singular vector. Thus, we should to establish
@@ -46,8 +48,42 @@ size_t a_start = delta_start + N - 1;
 class FG_eval {
  public:
   VectorXd coeffs;
+  std::vector<double> weights;
+
+  double dt;
+  double Lf;
+  double ref_v;
+  
+  size_t N;
+  size_t x_start;
+  size_t y_start;
+  size_t psi_start;
+  size_t v_start;
+  size_t cte_start;
+  size_t epsi_start;
+  size_t delta_start;
+  size_t a_start;
+
   // Coefficients of the fitted polynomial.
-  FG_eval(VectorXd coeffs) { this->coeffs = coeffs; }
+  FG_eval(VectorXd coeffs, std::vector<double> weights, std::vector<size_t> sizes, double dt, double Lf, double ref_v)
+  { 
+    this->coeffs = coeffs;
+    this->weights = weights;
+
+    this->N = sizes.at(0);
+    this->x_start = sizes.at(1);
+    this->y_start = sizes.at(2);
+    this->psi_start = sizes.at(3);
+    this->v_start = sizes.at(4);
+    this->cte_start = sizes.at(5);
+    this->epsi_start = sizes.at(6);
+    this->delta_start = sizes.at(7);
+    this->a_start = sizes.at(8);
+
+    this->dt = dt;
+    this->Lf = Lf;
+    this->ref_v = ref_v;
+  }
 
   typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
   // `fg` is a vector containing the cost and constraints.
@@ -65,23 +101,23 @@ class FG_eval {
     // Reference State Cost
     for (int t = 0; t < N; ++t)
     {
-      fg[0] += CppAD::pow(vars[cte_start + t], 2);
-      fg[0] += CppAD::pow(vars[epsi_start + t], 2);
-      fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
+      fg[0] += weights[0] * CppAD::pow(vars[cte_start + t], 2);
+      fg[0] += weights[1] * CppAD::pow(vars[epsi_start + t], 2);
+      fg[0] += weights[2] * CppAD::pow(vars[v_start + t] - ref_v, 2);
     }
 
     // Minimize the use of actuators
     for (int t = 0; t < N - 1; ++t)
     {
-      fg[0] += CppAD::pow(vars[delta_start + t], 2);
-      fg[0] += CppAD::pow(vars[a_start + t], 2);
+      fg[0] += weights[3] * CppAD::pow(vars[delta_start + t], 2);
+      fg[0] += weights[4] * CppAD::pow(vars[a_start + t], 2);
     }
 
     // Minimize the value gap between sequential actuators
     for (int t = 0; t < N - 2; ++t)
     {
-      fg[0] += w_cont_steer * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
-      fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
+      fg[0] += weights[5] * CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
+      fg[0] += weights[6] * CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
 
     //
@@ -210,14 +246,14 @@ std::vector<double> MPC::Solve(const VectorXd &x0, const VectorXd &coeffs) {
   // degrees (values in radians).
   // NOTE: Feel free to change this to something else.
   for (int i = delta_start; i < a_start; ++i) {
-    vars_lowerbound[i] = -0.436332;
-    vars_upperbound[i] = 0.436332;
+    vars_lowerbound[i] = -0.336;
+    vars_upperbound[i] = 0.336;
   }
 
   // Acceleration/decceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
   for (int i = a_start; i < n_vars; ++i) {
-    vars_lowerbound[i] = -1.0;
+    vars_lowerbound[i] = -3.0;
     vars_upperbound[i] = 1.0;
   }
 
@@ -245,7 +281,22 @@ std::vector<double> MPC::Solve(const VectorXd &x0, const VectorXd &coeffs) {
   constraints_upperbound[epsi_start] = epsi;
 
   // Object that computes objective and constraints
-  FG_eval fg_eval(coeffs);
+  //FG_eval fg_eval(coeffs);
+
+  std::vector<size_t> sizes = 
+  {
+    N,
+    x_start,
+    y_start,
+    psi_start,
+    v_start,
+    cte_start,
+    epsi_start,
+    delta_start,
+    a_start
+  };
+  
+  FG_eval fg_eval(coeffs, weights, sizes, dt, Lf, ref_v);
 
   // options
   std::string options;
